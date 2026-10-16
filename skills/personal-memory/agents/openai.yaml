@@ -1,0 +1,4 @@
+interface:
+  display_name: "Personal Memory"
+  short_description: "Recall and maintain your private local personal profile"
+  default_prompt: "Use $personal-memory to recall only the personal context relevant to this conversation."

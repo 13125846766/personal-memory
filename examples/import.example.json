@@ -1,0 +1,8 @@
+{
+  "format": "personal-memory/1",
+  "note": "Fictional examples only. Import always places entries in pending review.",
+  "memories": [
+    {"topic": "preferences", "statement": "演示资料：我喜欢先看结论，再看细节。", "source": "虚构演示，不是当前用户资料", "kind": "user-stated", "sensitivity": "ordinary", "key": "communication-style"},
+    {"topic": "goals", "statement": "演示资料：近期在学习一门新语言。", "source": "虚构演示，不是当前用户资料", "kind": "user-stated", "sensitivity": "ordinary"}
+  ]
+}

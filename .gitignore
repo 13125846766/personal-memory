@@ -1,0 +1,15 @@
+# Real personal data belongs OUTSIDE this repository. These are fallback exclusions.
+private/
+vault/
+data/
+memories/
+*.local.*
+*.sqlite3
+*.sqlite3-*
+*.db
+*.db-*
+.env
+.env.*
+__pycache__/
+.DS_Store
+Thumbs.db

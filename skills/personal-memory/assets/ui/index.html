@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="memory-token" content="__MEMORY_TOKEN__">
+  <title>Personal Memory · 个人记忆</title><link rel="stylesheet" href="/style.css">
+  <script src="/app.js" defer></script>
+</head>
+<body>
+<div class="shell">
+  <aside>
+    <a class="brand" href="/" aria-label="首页"><span class="mark">m</span> personal memory<span class="version">0.2</span></a>
+    <div class="aside-main">
+      <span class="eyebrow">YOUR LOCAL SPACE</span><h1>让下一次对话，<br>从了解你开始。</h1>
+      <p>一份由你保管、随时可以修正的个人档案。</p>
+      <label for="profile">当前档案</label>
+      <div class="profile-row"><select id="profile"><option value="default">default</option></select><button id="new-profile" class="icon" title="新建档案" aria-label="新建档案">＋</button></div>
+      <nav aria-label="记录状态"><button class="nav active" data-view="all">全部记忆 <span id="total">0</span></button><button class="nav" data-view="active">已确认</button><button class="nav" data-view="pending">待确认</button><button class="nav" data-view="expired">已过期</button></nav>
+      <div class="local-badge"><i></i> 本机运行 · 无遥测</div>
+    </div>
+    <p class="aside-foot">档案是明文。调用云端 AI 时，选中的资料会进入模型上下文。</p>
+  </aside>
+  <main>
+    <header><div><span class="eyebrow">A LITTLE CONTEXT GOES A LONG WAY</span><h2>我的记忆空间</h2><p>留下有用的背景，让不再准确的记录及时离开。</p></div><button id="add" class="primary">＋ 添加记忆</button></header>
+    <section class="summary" aria-label="档案概览"><div><strong id="confirmed-count">0</strong><span>已确认</span></div><div><strong id="pending-count">0</strong><span>等待你确认</span></div><div><strong id="expired-count">0</strong><span>已过期，不参与调用</span></div><div class="capsule-callout"><span>换一个 AI，也能继续聊</span><button id="capsule">生成上下文卡片 ↗</button></div></section>
+    <div class="toolbar"><label class="search-label"><span>⌕</span><input id="search" type="search" placeholder="搜索记忆、来源或字段…" aria-label="搜索记忆"></label><select id="topic" aria-label="筛选主题"><option value="">所有主题</option><option value="identity">个人信息</option><option value="education">教育经历</option><option value="preferences">偏好习惯</option><option value="personality">性格自述</option><option value="relationships">情感经历</option><option value="goals">目标计划</option></select><label class="sensitive"><input id="sensitive" type="checkbox">显示敏感记录</label></div>
+    <div class="list-heading"><h3 id="view-label">全部记忆</h3><span id="result-count"></span></div>
+    <section id="records" class="records" aria-live="polite"></section>
+    <section id="empty" class="empty" hidden><div class="empty-icon">✦</div><h3>从一件值得记住的小事开始</h3><p>例如你的沟通偏好、正在学习的方向，或一个近期目标。<br>尚未提供的信息会保持空白。</p><button id="empty-add">添加第一条记忆</button></section>
+    <footer><div><button id="import">导入 JSON</button><button id="export">导出此档案</button><button id="health">检查档案</button><input id="import-file" type="file" accept=".json,application/json" hidden></div><span>本地保存 · 无账号 · 无外部依赖</span></footer>
+    <p class="legacy" id="legacy" hidden></p>
+  </main>
+</div>
+<div id="toast" role="status" hidden></div>
+<dialog id="editor"><form id="editor-form"><div class="dialog-head"><h2 id="editor-title">添加记忆</h2><button type="button" class="close" data-close="editor" aria-label="关闭">×</button></div><label>记住什么<textarea id="statement" required maxlength="6000" rows="4" placeholder="写下一条清晰、具体的背景信息"></textarea></label><div class="form-grid"><label>主题<select id="edit-topic"><option value="identity">个人信息</option><option value="education">教育经历</option><option value="preferences" selected>偏好习惯</option><option value="personality">性格自述</option><option value="relationships">情感经历</option><option value="goals">目标计划</option></select></label><label>依据<select id="kind"><option value="user-stated">本人陈述</option><option value="user-confirmed-interpretation">本人确认过的解释</option><option value="tentative">尚未确认的推测</option></select></label></div><label>来源<input id="source" maxlength="2000" placeholder="例如：本人填写；日期或聊天来源"></label><div class="form-grid"><label>有效至（可选）<input id="expires" type="date"></label><label>字段标识（可选）<input id="key" maxlength="100" placeholder="如 current-school，用于检查冲突"></label></div><div class="form-grid"><label>状态<select id="status"><option value="active">已确认</option><option value="pending">待确认</option></select></label><label>敏感程度<select id="edit-sensitivity"><option value="ordinary">普通</option><option value="sensitive">敏感</option></select></label></div><p class="hint">推测自动进入待确认。同一字段已有不同的有效记录时，新记录也会进入待确认。</p><div class="dialog-actions"><button type="button" data-close="editor">取消</button><button type="submit" class="primary">保存在本机</button></div></form></dialog>
+<dialog id="text-dialog"><div class="dialog-head"><h2 id="text-title">上下文卡片</h2><button class="close" data-close="text-dialog" aria-label="关闭">×</button></div><p id="text-hint" class="hint"></p><textarea id="text-output" rows="15" readonly aria-label="输出内容"></textarea><div class="dialog-actions"><button id="copy" class="primary">复制</button></div></dialog>
+<dialog id="confirm-dialog"><form method="dialog"><div class="dialog-head"><h2 id="confirm-title">确认操作</h2></div><p id="confirm-message"></p><div class="dialog-actions"><button value="cancel">取消</button><button value="yes" id="confirm-yes" class="primary">继续</button></div></form></dialog>
+<dialog id="profile-dialog"><form id="profile-form"><div class="dialog-head"><h2>新建独立档案</h2></div><p class="hint">例如 personal、work。不同档案分别检索和导出。它们共用本机数据库，不构成不同用户之间的权限隔离。</p><label>档案标识<input id="profile-name" required pattern="[a-z0-9][a-z0-9_-]{0,31}" maxlength="32" placeholder="work"></label><div class="dialog-actions"><button type="button" data-close="profile-dialog">取消</button><button class="primary" type="submit">创建</button></div></form></dialog>
+</body></html>
